@@ -3,6 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '/backend/schema/structs/index.dart';
+
+import '/auth/custom_auth/custom_auth_user_provider.dart';
+
 import '/main.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 
@@ -21,7 +25,46 @@ class AppStateNotifier extends ChangeNotifier {
   static AppStateNotifier? _instance;
   static AppStateNotifier get instance => _instance ??= AppStateNotifier._();
 
+  MedBondAuthUser? initialUser;
+  MedBondAuthUser? user;
   bool showSplashImage = true;
+  String? _redirectLocation;
+
+  /// Determines whether the app will refresh and build again when a sign
+  /// in or sign out happens. This is useful when the app is launched or
+  /// on an unexpected logout. However, this must be turned off when we
+  /// intend to sign in/out and then navigate or perform any actions after.
+  /// Otherwise, this will trigger a refresh and interrupt the action(s).
+  bool notifyOnAuthChange = true;
+
+  bool get loading => user == null || showSplashImage;
+  bool get loggedIn => user?.loggedIn ?? false;
+  bool get initiallyLoggedIn => initialUser?.loggedIn ?? false;
+  bool get shouldRedirect => loggedIn && _redirectLocation != null;
+
+  String getRedirectLocation() => _redirectLocation!;
+  bool hasRedirect() => _redirectLocation != null;
+  void setRedirectLocationIfUnset(String loc) => _redirectLocation ??= loc;
+  void clearRedirectLocation() => _redirectLocation = null;
+
+  /// Mark as not needing to notify on a sign in / out when we intend
+  /// to perform subsequent actions (such as navigation) afterwards.
+  void updateNotifyOnAuthChange(bool notify) => notifyOnAuthChange = notify;
+
+  void update(MedBondAuthUser newUser) {
+    final shouldUpdate =
+        user?.uid == null || newUser.uid == null || user?.uid != newUser.uid;
+    initialUser ??= newUser;
+    user = newUser;
+    // Refresh the app on auth change unless explicitly marked otherwise.
+    // No need to update unless the user has changed.
+    if (notifyOnAuthChange && shouldUpdate) {
+      notifyListeners();
+    }
+    // Once again mark the notifier as needing to update on auth change
+    // (in order to catch sign in / out events).
+    updateNotifyOnAuthChange(true);
+  }
 
   void stopShowingSplashImage() {
     showSplashImage = false;
@@ -34,12 +77,14 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
       navigatorKey: appNavigatorKey,
-      errorBuilder: (context, state) => NavBarPage(),
+      errorBuilder: (context, state) =>
+          appStateNotifier.loggedIn ? NavBarPage() : LoginWidget(),
       routes: [
         FFRoute(
           name: '_initialize',
           path: '/',
-          builder: (context, _) => NavBarPage(),
+          builder: (context, _) =>
+              appStateNotifier.loggedIn ? NavBarPage() : LoginWidget(),
         ),
         FFRoute(
           name: HomePageWidget.routeName,
@@ -59,11 +104,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => ProviderFinderLandingPageWidget(),
         ),
         FFRoute(
-          name: SearchResultsPageWidget.routeName,
-          path: SearchResultsPageWidget.routePath,
-          builder: (context, params) => SearchResultsPageWidget(),
-        ),
-        FFRoute(
           name: MyPoliciesWidget.routeName,
           path: MyPoliciesWidget.routePath,
           builder: (context, params) => params.isEmpty
@@ -76,30 +116,24 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => PolicyDocumentsWidget(),
         ),
         FFRoute(
-          name: PolicyDependantsWidget.routeName,
-          path: PolicyDependantsWidget.routePath,
-          builder: (context, params) => PolicyDependantsWidget(),
+          name: SubmitAClaimWidget.routeName,
+          path: SubmitAClaimWidget.routePath,
+          builder: (context, params) => SubmitAClaimWidget(),
         ),
         FFRoute(
-          name: FileAClaimWidget.routeName,
-          path: FileAClaimWidget.routePath,
-          builder: (context, params) => FileAClaimWidget(),
-        ),
-        FFRoute(
-          name: ClaimManagmentWidget.routeName,
-          path: ClaimManagmentWidget.routePath,
-          builder: (context, params) => params.isEmpty
-              ? NavBarPage(initialPage: 'ClaimManagment')
-              : NavBarPage(
-                  initialPage: 'ClaimManagment',
-                  page: ClaimManagmentWidget(),
-                ),
-        ),
-        FFRoute(
-          name: ClaimManagmentPreWidget.routeName,
-          path: ClaimManagmentPreWidget.routePath,
-          builder: (context, params) => ClaimManagmentPreWidget(),
-        ),
+            name: ClaimManagmentWidget.routeName,
+            path: ClaimManagmentWidget.routePath,
+            builder: (context, params) => params.isEmpty
+                ? NavBarPage(initialPage: 'ClaimManagment')
+                : NavBarPage(
+                    initialPage: 'ClaimManagment',
+                    page: ClaimManagmentWidget(
+                      claim: params.getParam(
+                        'claim',
+                        ParamType.String,
+                      ),
+                    ),
+                  )),
         FFRoute(
           name: SettingsWidget.routeName,
           path: SettingsWidget.routePath,
@@ -116,12 +150,14 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => ProfileWidget(),
         ),
         FFRoute(
-          name: HealthMetricsWidget.routeName,
-          path: HealthMetricsWidget.routePath,
-          builder: (context, params) => params.isEmpty
-              ? NavBarPage(initialPage: 'Health_Metrics')
-              : HealthMetricsWidget(),
-        ),
+            name: WellnessPreviewWidget.routeName,
+            path: WellnessPreviewWidget.routePath,
+            builder: (context, params) => params.isEmpty
+                ? NavBarPage(initialPage: 'Wellness_Preview')
+                : NavBarPage(
+                    initialPage: 'Wellness_Preview',
+                    page: WellnessPreviewWidget(),
+                  )),
         FFRoute(
           name: HelpSupportWidget.routeName,
           path: HelpSupportWidget.routePath,
@@ -131,6 +167,116 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: TicketFormWidget.routeName,
           path: TicketFormWidget.routePath,
           builder: (context, params) => TicketFormWidget(),
+        ),
+        FFRoute(
+          name: ClaimDetailWidget.routeName,
+          path: ClaimDetailWidget.routePath,
+          builder: (context, params) => ClaimDetailWidget(
+            claim: params.getParam(
+              'claim',
+              ParamType.DataStruct,
+              isList: false,
+              structBuilder: ClaimStruct.fromSerializableMap,
+            ),
+            id: params.getParam(
+              'id',
+              ParamType.String,
+            ),
+          ),
+        ),
+        FFRoute(
+          name: PreapprovalWidget.routeName,
+          path: PreapprovalWidget.routePath,
+          builder: (context, params) => PreapprovalWidget(),
+        ),
+        FFRoute(
+          name: ProvidersResultsWidget.routeName,
+          path: ProvidersResultsWidget.routePath,
+          builder: (context, params) => ProvidersResultsWidget(),
+        ),
+        FFRoute(
+          name: ClaimStepOneWidget.routeName,
+          path: ClaimStepOneWidget.routePath,
+          builder: (context, params) => ClaimStepOneWidget(),
+        ),
+        FFRoute(
+          name: ClaimStepTwoWidget.routeName,
+          path: ClaimStepTwoWidget.routePath,
+          builder: (context, params) => ClaimStepTwoWidget(),
+        ),
+        FFRoute(
+          name: ClaimStepThreeWidget.routeName,
+          path: ClaimStepThreeWidget.routePath,
+          builder: (context, params) => ClaimStepThreeWidget(),
+        ),
+        FFRoute(
+          name: ClaimStepFourWidget.routeName,
+          path: ClaimStepFourWidget.routePath,
+          builder: (context, params) => ClaimStepFourWidget(),
+        ),
+        FFRoute(
+          name: HealthMetricsWidget.routeName,
+          path: HealthMetricsWidget.routePath,
+          builder: (context, params) => HealthMetricsWidget(),
+        ),
+        FFRoute(
+          name: PDFtableOfBenefitsWidget.routeName,
+          path: PDFtableOfBenefitsWidget.routePath,
+          builder: (context, params) => PDFtableOfBenefitsWidget(),
+        ),
+        FFRoute(
+          name: PDFBenefitGuideWidget.routeName,
+          path: PDFBenefitGuideWidget.routePath,
+          builder: (context, params) => PDFBenefitGuideWidget(),
+        ),
+        FFRoute(
+          name: PDFInsuranceCertificateWidget.routeName,
+          path: PDFInsuranceCertificateWidget.routePath,
+          builder: (context, params) => PDFInsuranceCertificateWidget(),
+        ),
+        FFRoute(
+          name: PDFMembershipCardWidget.routeName,
+          path: PDFMembershipCardWidget.routePath,
+          builder: (context, params) => PDFMembershipCardWidget(),
+        ),
+        FFRoute(
+          name: PDFAdditionalInformationWidget.routeName,
+          path: PDFAdditionalInformationWidget.routePath,
+          builder: (context, params) => PDFAdditionalInformationWidget(),
+        ),
+        FFRoute(
+          name: PDFTreatmentGuaranteeWidget.routeName,
+          path: PDFTreatmentGuaranteeWidget.routePath,
+          builder: (context, params) => PDFTreatmentGuaranteeWidget(),
+        ),
+        FFRoute(
+          name: DependantsManagmentWidget.routeName,
+          path: DependantsManagmentWidget.routePath,
+          builder: (context, params) => DependantsManagmentWidget(),
+        ),
+        FFRoute(
+          name: DependantDetailsWidget.routeName,
+          path: DependantDetailsWidget.routePath,
+          builder: (context, params) => DependantDetailsWidget(
+            dependant: params.getParam(
+              'dependant',
+              ParamType.DataStruct,
+              isList: false,
+              structBuilder: DependentsStruct.fromSerializableMap,
+            ),
+          ),
+        ),
+        FFRoute(
+          name: SpecialClaimDetailWidget.routeName,
+          path: SpecialClaimDetailWidget.routePath,
+          builder: (context, params) => SpecialClaimDetailWidget(
+            specialClaim: params.getParam(
+              'specialClaim',
+              ParamType.DataStruct,
+              isList: false,
+              structBuilder: SpecialClaimsStruct.fromSerializableMap,
+            ),
+          ),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
@@ -144,6 +290,40 @@ extension NavParamExtensions on Map<String, String?> {
 }
 
 extension NavigationExtensions on BuildContext {
+  void goNamedAuth(
+    String name,
+    bool mounted, {
+    Map<String, String> pathParameters = const <String, String>{},
+    Map<String, String> queryParameters = const <String, String>{},
+    Object? extra,
+    bool ignoreRedirect = false,
+  }) =>
+      !mounted || GoRouter.of(this).shouldRedirect(ignoreRedirect)
+          ? null
+          : goNamed(
+              name,
+              pathParameters: pathParameters,
+              queryParameters: queryParameters,
+              extra: extra,
+            );
+
+  void pushNamedAuth(
+    String name,
+    bool mounted, {
+    Map<String, String> pathParameters = const <String, String>{},
+    Map<String, String> queryParameters = const <String, String>{},
+    Object? extra,
+    bool ignoreRedirect = false,
+  }) =>
+      !mounted || GoRouter.of(this).shouldRedirect(ignoreRedirect)
+          ? null
+          : pushNamed(
+              name,
+              pathParameters: pathParameters,
+              queryParameters: queryParameters,
+              extra: extra,
+            );
+
   void safePop() {
     // If there is only one route on the stack, navigate to the initial
     // page instead of popping.
@@ -153,6 +333,19 @@ extension NavigationExtensions on BuildContext {
       go('/');
     }
   }
+}
+
+extension GoRouterExtensions on GoRouter {
+  AppStateNotifier get appState => AppStateNotifier.instance;
+  void prepareAuthEvent([bool ignoreRedirect = false]) =>
+      appState.hasRedirect() && !ignoreRedirect
+          ? null
+          : appState.updateNotifyOnAuthChange(false);
+  bool shouldRedirect(bool ignoreRedirect) =>
+      !ignoreRedirect && appState.hasRedirect();
+  void clearRedirectLocation() => appState.clearRedirectLocation();
+  void setRedirectLocationIfUnset(String location) =>
+      appState.updateNotifyOnAuthChange(false);
 }
 
 extension _GoRouterStateExtensions on GoRouterState {
@@ -202,6 +395,7 @@ class FFParameters {
     String paramName,
     ParamType type, {
     bool isList = false,
+    StructBuilder<T>? structBuilder,
   }) {
     if (futureParamValues.containsKey(paramName)) {
       return futureParamValues[paramName];
@@ -219,6 +413,7 @@ class FFParameters {
       param,
       type,
       isList,
+      structBuilder: structBuilder,
     );
   }
 }
@@ -243,6 +438,19 @@ class FFRoute {
   GoRoute toRoute(AppStateNotifier appStateNotifier) => GoRoute(
         name: name,
         path: path,
+        redirect: (context, state) {
+          if (appStateNotifier.shouldRedirect) {
+            final redirectLocation = appStateNotifier.getRedirectLocation();
+            appStateNotifier.clearRedirectLocation();
+            return redirectLocation;
+          }
+
+          if (requireAuth && !appStateNotifier.loggedIn) {
+            appStateNotifier.setRedirectLocationIfUnset(state.uri.toString());
+            return '/login';
+          }
+          return null;
+        },
         pageBuilder: (context, state) {
           fixStatusBarOniOS16AndBelow(context);
           final ffParams = FFParameters(state, asyncParams);
@@ -252,7 +460,15 @@ class FFRoute {
                   builder: (context, _) => builder(context, ffParams),
                 )
               : builder(context, ffParams);
-          final child = page;
+          final child = appStateNotifier.loading
+              ? Container(
+                  color: Colors.transparent,
+                  child: Image.asset(
+                    'assets/images/Splash.png',
+                    fit: BoxFit.cover,
+                  ),
+                )
+              : page;
 
           final transitionInfo = state.transitionInfo;
           return transitionInfo.hasTransition

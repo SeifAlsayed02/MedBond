@@ -1,6 +1,7 @@
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'notifications_model.dart';
 export 'notifications_model.dart';
 
@@ -23,6 +24,8 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => NotificationsModel());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -73,8 +76,21 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                   child: Text(
                     'No Notifications Found',
                     style: FlutterFlowTheme.of(context).titleMedium.override(
-                          fontFamily: 'Inter Tight',
+                          font: GoogleFonts.interTight(
+                            fontWeight: FlutterFlowTheme.of(context)
+                                .titleMedium
+                                .fontWeight,
+                            fontStyle: FlutterFlowTheme.of(context)
+                                .titleMedium
+                                .fontStyle,
+                          ),
                           letterSpacing: 0.0,
+                          fontWeight: FlutterFlowTheme.of(context)
+                              .titleMedium
+                              .fontWeight,
+                          fontStyle: FlutterFlowTheme.of(context)
+                              .titleMedium
+                              .fontStyle,
                         ),
                   ),
                 ),

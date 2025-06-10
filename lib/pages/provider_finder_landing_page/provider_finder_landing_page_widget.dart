@@ -1,4 +1,6 @@
-import '/flutter_flow/flutter_flow_choice_chips.dart';
+import '/backend/api_requests/api_calls.dart';
+import '/backend/schema/structs/index.dart';
+import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -6,19 +8,10 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
 import '/index.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'provider_finder_landing_page_model.dart';
 export 'provider_finder_landing_page_model.dart';
 
-/// Design a clean and modern mobile app landing page for a healthcare
-/// provider search feature.
-///
-/// Include a prominent search bar at the top with placeholder text like
-/// 'Search by specialty, doctor, or hospital.' Below the search bar, add a
-/// section for quick filters (e.g., location, specialty, in-network
-/// providers). Include a 'Find Providers' button. Optionally, add a section
-/// for featured providers or hospitals with images, names, and ratings. Use a
-/// neutral color palette with accents for buttons and calls-to-action. Ensure
-/// the design is user-friendly and accessible.
 class ProviderFinderLandingPageWidget extends StatefulWidget {
   const ProviderFinderLandingPageWidget({super.key});
 
@@ -35,14 +28,20 @@ class _ProviderFinderLandingPageWidgetState
   late ProviderFinderLandingPageModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  LatLng? currentUserLocationValue;
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => ProviderFinderLandingPageModel());
 
-    _model.textController ??= TextEditingController();
-    _model.textFieldFocusNode ??= FocusNode();
+    _model.textController1 ??= TextEditingController();
+    _model.textFieldFocusNode1 ??= FocusNode();
+
+    _model.textController2 ??= TextEditingController();
+    _model.textFieldFocusNode2 ??= FocusNode();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -82,1683 +81,863 @@ class _ProviderFinderLandingPageWidgetState
           title: Text(
             'Healthcare Providers',
             style: FlutterFlowTheme.of(context).headlineMedium.override(
-                  fontFamily: 'Inter Tight',
+                  font: GoogleFonts.interTight(
+                    fontWeight:
+                        FlutterFlowTheme.of(context).headlineMedium.fontWeight,
+                    fontStyle:
+                        FlutterFlowTheme.of(context).headlineMedium.fontStyle,
+                  ),
                   color: Colors.white,
                   fontSize: 22.0,
                   letterSpacing: 0.0,
+                  fontWeight:
+                      FlutterFlowTheme.of(context).headlineMedium.fontWeight,
+                  fontStyle:
+                      FlutterFlowTheme.of(context).headlineMedium.fontStyle,
                 ),
           ),
           actions: [],
           centerTitle: false,
           elevation: 2.0,
         ),
-        body: SingleChildScrollView(
-          primary: false,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                  ),
-                  child: Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(12.0, 16.0, 12.0, 16.0),
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Color(0x3C2A7BFF),
-                        borderRadius: BorderRadius.circular(12.0),
-                        border: Border.all(
-                          color: Color(0x7D2A7BFF),
-                          width: 3.0,
-                        ),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(12.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Icon(
-                              Icons.search_rounded,
-                              color: Color(0xFF57636C),
-                              size: 24.0,
-                            ),
-                            Expanded(
-                              child: TextFormField(
-                                controller: _model.textController,
-                                focusNode: _model.textFieldFocusNode,
-                                autofocus: false,
-                                obscureText: false,
-                                decoration: InputDecoration(
-                                  labelText:
-                                      'Search by specialty, doctor, or hospital',
-                                  labelStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'Inter',
-                                        letterSpacing: 0.0,
-                                      ),
-                                  hintStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'Inter',
-                                        color: Color(0xFF101518),
-                                        fontSize: 14.0,
-                                        letterSpacing: 0.0,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                  enabledBorder: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                  errorBorder: InputBorder.none,
-                                  focusedErrorBorder: InputBorder.none,
-                                  suffixIcon: Icon(
-                                    Icons.mic_rounded,
-                                  ),
-                                ),
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'Inter',
-                                      color: Color(0xFF101518),
-                                      fontSize: 14.0,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                validator: _model.textControllerValidator
-                                    .asValidator(context),
-                              ),
-                            ),
-                          ].divide(SizedBox(width: 12.0)),
-                        ),
-                      ),
+        body: Padding(
+          padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 24.0),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(24.0),
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: FlutterFlowTheme.of(context).secondaryBackground,
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 4.0,
+                          color: FlutterFlowTheme.of(context).primaryText,
+                          offset: Offset(
+                            0.0,
+                            2.0,
+                          ),
+                        )
+                      ],
+                      borderRadius: BorderRadius.circular(12.0),
                     ),
-                  ),
-                ),
-              ),
-              Flexible(
-                child: Align(
-                  alignment: AlignmentDirectional(0.0, 0.0),
-                  child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(5.0, 0.0, 5.0, 0.0),
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                      ),
-                      child: Align(
-                        alignment: AlignmentDirectional(0.0, -1.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: double.infinity,
-                              height: 50.0,
-                              decoration: BoxDecoration(),
-                              child: Align(
-                                alignment: AlignmentDirectional(0.0, -1.0),
-                                child: ListView(
-                                  padding: EdgeInsets.fromLTRB(
-                                    4.0,
-                                    0,
-                                    4.0,
-                                    0,
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Text(
+                            'Search for Healthcare Providers',
+                            textAlign: TextAlign.center,
+                            style: FlutterFlowTheme.of(context)
+                                .titleLarge
+                                .override(
+                                  font: GoogleFonts.interTight(
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .titleLarge
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .titleLarge
+                                        .fontStyle,
                                   ),
-                                  primary: false,
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.horizontal,
-                                  children: [
-                                    FlutterFlowChoiceChips(
-                                      options: [
-                                        ChipData('Cairo', Icons.location_on),
-                                        ChipData('Giza', Icons.location_on),
-                                        ChipData(
-                                            'Alexandria', Icons.location_on),
-                                        ChipData('Menoufya', Icons.location_on),
-                                        ChipData('Qalyubya', Icons.location_on)
-                                      ],
-                                      onChanged: (val) => safeSetState(() =>
-                                          _model.choiceChipsValue1 =
-                                              val?.firstOrNull),
-                                      selectedChipStyle: ChipStyle(
-                                        backgroundColor: Color(0xFF2A7BFF),
-                                        textStyle: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .override(
-                                              fontFamily: 'Inter',
-                                              color: Colors.white,
-                                              fontSize: 12.0,
-                                              letterSpacing: 0.0,
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                        iconColor: Colors.white,
-                                        iconSize: 18.0,
-                                        elevation: 0.0,
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                      ),
-                                      unselectedChipStyle: ChipStyle(
-                                        backgroundColor: Color(0x4F2A7BFF),
-                                        textStyle: FlutterFlowTheme.of(context)
-                                            .bodySmall
-                                            .override(
-                                              fontFamily: 'Inter',
-                                              color: Color(0xFF57636C),
-                                              fontSize: 12.0,
-                                              letterSpacing: 0.0,
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                        iconColor: Color(0xFF57636C),
-                                        iconSize: 18.0,
-                                        elevation: 0.0,
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                      ),
-                                      chipSpacing: 8.0,
-                                      rowSpacing: 8.0,
-                                      multiselect: false,
-                                      alignment: WrapAlignment.start,
-                                      controller:
-                                          _model.choiceChipsValueController1 ??=
-                                              FormFieldController<List<String>>(
-                                        [],
-                                      ),
-                                      wrapped: false,
-                                    ),
-                                  ].divide(SizedBox(width: 8.0)),
+                                  letterSpacing: 0.0,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .titleLarge
+                                      .fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .titleLarge
+                                      .fontStyle,
                                 ),
-                              ),
-                            ),
-                            Container(
-                              width: double.infinity,
-                              height: 50.0,
-                              child: ListView(
-                                padding: EdgeInsets.fromLTRB(
-                                  4.0,
-                                  0,
-                                  4.0,
-                                  0,
+                          ),
+                          Text(
+                            'Find the right healthcare professional near you',
+                            textAlign: TextAlign.center,
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  font: GoogleFonts.inter(
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontStyle,
+                                  ),
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryText,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontStyle,
                                 ),
-                                primary: false,
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
+                          ),
+                          Column(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  FlutterFlowChoiceChips(
-                                    options: [
-                                      ChipData('Primary Care'),
-                                      ChipData('Cardiology'),
-                                      ChipData('Pediatrics'),
-                                      ChipData('Dermatology'),
-                                      ChipData('Orthopedics')
-                                    ],
-                                    onChanged: (val) => safeSetState(() =>
-                                        _model.choiceChipsValue2 =
-                                            val?.firstOrNull),
-                                    selectedChipStyle: ChipStyle(
-                                      backgroundColor: Color(0xFF2A7BFF),
-                                      textStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'Inter',
-                                            color: Colors.white,
-                                            fontSize: 12.0,
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.normal,
+                                  Text(
+                                    'Your Location',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          font: GoogleFonts.inter(
+                                            fontWeight: FontWeight.w500,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
                                           ),
-                                      iconColor: Colors.white,
-                                      iconSize: 18.0,
-                                      elevation: 0.0,
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    ),
-                                    unselectedChipStyle: ChipStyle(
-                                      backgroundColor: Color(0x4F2A7BFF),
-                                      textStyle: FlutterFlowTheme.of(context)
-                                          .bodySmall
-                                          .override(
-                                            fontFamily: 'Inter',
-                                            color: Color(0xFF57636C),
-                                            fontSize: 12.0,
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                      iconColor: Color(0xFF57636C),
-                                      iconSize: 18.0,
-                                      elevation: 0.0,
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    ),
-                                    chipSpacing: 8.0,
-                                    rowSpacing: 8.0,
-                                    multiselect: false,
-                                    alignment: WrapAlignment.start,
-                                    controller:
-                                        _model.choiceChipsValueController2 ??=
-                                            FormFieldController<List<String>>(
-                                      [],
-                                    ),
-                                    wrapped: false,
-                                  ),
-                                ].divide(SizedBox(width: 8.0)),
-                              ),
-                            ),
-                            Container(
-                              width: double.infinity,
-                              height: 50.0,
-                              child: Align(
-                                alignment: AlignmentDirectional(0.0, 0.0),
-                                child: ListView(
-                                  padding: EdgeInsets.fromLTRB(
-                                    4.0,
-                                    0,
-                                    4.0,
-                                    0,
-                                  ),
-                                  primary: false,
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.horizontal,
-                                  children: [
-                                    Align(
-                                      alignment: AlignmentDirectional(0.0, 0.0),
-                                      child: FlutterFlowChoiceChips(
-                                        options: [
-                                          ChipData('Hospitals'),
-                                          ChipData('Labs'),
-                                          ChipData('Clinics')
-                                        ],
-                                        onChanged: (val) => safeSetState(() =>
-                                            _model.choiceChipsValue3 =
-                                                val?.firstOrNull),
-                                        selectedChipStyle: ChipStyle(
-                                          backgroundColor: Color(0xFF2A7BFF),
-                                          textStyle:
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.w500,
+                                          fontStyle:
                                               FlutterFlowTheme.of(context)
                                                   .bodyMedium
-                                                  .override(
-                                                    fontFamily: 'Inter',
-                                                    color: Colors.white,
-                                                    fontSize: 12.0,
-                                                    letterSpacing: 0.0,
+                                                  .fontStyle,
+                                        ),
+                                  ),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          width: double.infinity,
+                                          child: TextFormField(
+                                            controller: _model.textController1,
+                                            focusNode:
+                                                _model.textFieldFocusNode1,
+                                            autofocus: false,
+                                            textInputAction:
+                                                TextInputAction.next,
+                                            obscureText: false,
+                                            decoration: InputDecoration(
+                                              hintText:
+                                                  'Enter your city or zip code',
+                                              hintStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        font: GoogleFonts.inter(
+                                                          fontWeight:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontWeight,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodyMedium
+                                                                  .fontStyle,
+                                                        ),
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .secondaryText,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .fontWeight,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .fontStyle,
+                                                      ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: Color(0x00000000),
+                                                  width: 1.0,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primary,
+                                                  width: 1.0,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ),
+                                              errorBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .error,
+                                                  width: 1.0,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ),
+                                              focusedErrorBorder:
+                                                  OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .error,
+                                                  width: 1.0,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ),
+                                              filled: true,
+                                              fillColor:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primaryBackground,
+                                              prefixIcon: Icon(
+                                                Icons.location_on,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryText,
+                                                size: 20.0,
+                                              ),
+                                            ),
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  font: GoogleFonts.inter(
                                                     fontWeight:
-                                                        FontWeight.normal,
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMedium
+                                                            .fontWeight,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodyMedium
+                                                            .fontStyle,
                                                   ),
-                                          iconColor: Colors.white,
-                                          iconSize: 18.0,
-                                          elevation: 0.0,
-                                          borderRadius:
-                                              BorderRadius.circular(20.0),
+                                                  letterSpacing: 0.0,
+                                                  fontWeight:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontWeight,
+                                                  fontStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .bodyMedium
+                                                          .fontStyle,
+                                                ),
+                                            validator: _model
+                                                .textController1Validator
+                                                .asValidator(context),
+                                          ),
                                         ),
-                                        unselectedChipStyle: ChipStyle(
-                                          backgroundColor: Color(0x4F2A7BFF),
-                                          textStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodySmall
-                                                  .override(
-                                                    fontFamily: 'Inter',
-                                                    color: Color(0xFF57636C),
-                                                    fontSize: 12.0,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                  ),
-                                          iconColor: Color(0xFF57636C),
-                                          iconSize: 18.0,
-                                          elevation: 0.0,
-                                          borderRadius:
-                                              BorderRadius.circular(20.0),
-                                        ),
-                                        chipSpacing: 8.0,
-                                        rowSpacing: 8.0,
-                                        multiselect: false,
-                                        alignment: WrapAlignment.start,
-                                        controller: _model
-                                                .choiceChipsValueController3 ??=
-                                            FormFieldController<List<String>>(
-                                          [],
-                                        ),
-                                        wrapped: false,
                                       ),
-                                    ),
-                                  ].divide(SizedBox(width: 8.0)),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              width: double.infinity,
-                              height: 50.0,
-                              child: ListView(
-                                padding: EdgeInsets.fromLTRB(
-                                  4.0,
-                                  0,
-                                  4.0,
-                                  0,
-                                ),
-                                primary: false,
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                children: [
-                                  FlutterFlowChoiceChips(
-                                    options: [
-                                      ChipData('Available Today',
-                                          Icons.event_available),
-                                      ChipData(
-                                          'Next 3 Days', Icons.calendar_today),
-                                      ChipData('This Week', Icons.date_range),
-                                      ChipData('Next Week', Icons.schedule)
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            5.0, 0.0, 0.0, 0.0),
+                                        child: FlutterFlowIconButton(
+                                          borderRadius: 8.0,
+                                          buttonSize: 40.0,
+                                          fillColor:
+                                              FlutterFlowTheme.of(context)
+                                                  .secondaryText,
+                                          icon: Icon(
+                                            Icons.my_location,
+                                            color: FlutterFlowTheme.of(context)
+                                                .info,
+                                            size: 24.0,
+                                          ),
+                                          onPressed: () async {
+                                            currentUserLocationValue =
+                                                await getCurrentUserLocation(
+                                                    defaultLocation:
+                                                        LatLng(0.0, 0.0));
+                                            FFAppState().Mylocation =
+                                                currentUserLocationValue;
+                                            safeSetState(() {});
+                                          },
+                                        ),
+                                      ),
                                     ],
-                                    onChanged: (val) => safeSetState(() =>
-                                        _model.choiceChipsValue4 =
-                                            val?.firstOrNull),
-                                    selectedChipStyle: ChipStyle(
-                                      backgroundColor: Color(0xFF2A7BFF),
-                                      textStyle: FlutterFlowTheme.of(context)
+                                  ),
+                                ].divide(SizedBox(height: 8.0)),
+                              ),
+                              Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Provider Name (Optional)',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          font: GoogleFonts.inter(
+                                            fontWeight: FontWeight.w500,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.w500,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontStyle,
+                                        ),
+                                  ),
+                                  Container(
+                                    width: double.infinity,
+                                    child: TextFormField(
+                                      controller: _model.textController2,
+                                      focusNode: _model.textFieldFocusNode2,
+                                      autofocus: false,
+                                      textInputAction: TextInputAction.next,
+                                      obscureText: false,
+                                      decoration: InputDecoration(
+                                        hintText:
+                                            'Enter doctor or hospital name',
+                                        hintStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              font: GoogleFonts.inter(
+                                                fontWeight:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium
+                                                        .fontWeight,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium
+                                                        .fontStyle,
+                                              ),
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondaryText,
+                                              letterSpacing: 0.0,
+                                              fontWeight:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontWeight,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontStyle,
+                                            ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0x00000000),
+                                            width: 1.0,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary,
+                                            width: 1.0,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                        errorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: FlutterFlowTheme.of(context)
+                                                .error,
+                                            width: 1.0,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                        focusedErrorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: FlutterFlowTheme.of(context)
+                                                .error,
+                                            width: 1.0,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                        filled: true,
+                                        fillColor: FlutterFlowTheme.of(context)
+                                            .primaryBackground,
+                                        prefixIcon: Icon(
+                                          Icons.person,
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondaryText,
+                                          size: 20.0,
+                                        ),
+                                      ),
+                                      style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
-                                            fontFamily: 'Inter',
-                                            color: Colors.white,
-                                            fontSize: 12.0,
+                                            font: GoogleFonts.inter(
+                                              fontWeight:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontWeight,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontStyle,
+                                            ),
                                             letterSpacing: 0.0,
-                                            fontWeight: FontWeight.normal,
+                                            fontWeight:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontWeight,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
                                           ),
-                                      iconColor: Colors.white,
-                                      iconSize: 18.0,
-                                      elevation: 0.0,
-                                      borderRadius: BorderRadius.circular(20.0),
+                                      validator: _model.textController2Validator
+                                          .asValidator(context),
                                     ),
-                                    unselectedChipStyle: ChipStyle(
-                                      backgroundColor: Color(0x4F2A7BFF),
-                                      textStyle: FlutterFlowTheme.of(context)
-                                          .bodySmall
-                                          .override(
-                                            fontFamily: 'Inter',
-                                            color: Color(0xFF57636C),
-                                            fontSize: 12.0,
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                      iconColor: Color(0xFF57636C),
-                                      iconSize: 18.0,
-                                      elevation: 0.0,
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    ),
-                                    chipSpacing: 8.0,
-                                    rowSpacing: 8.0,
-                                    multiselect: false,
-                                    alignment: WrapAlignment.start,
-                                    controller:
-                                        _model.choiceChipsValueController4 ??=
-                                            FormFieldController<List<String>>(
-                                      [],
-                                    ),
-                                    wrapped: false,
                                   ),
-                                ].divide(SizedBox(width: 8.0)),
+                                ].divide(SizedBox(height: 8.0)),
                               ),
-                            ),
-                            FFButtonWidget(
-                              onPressed: () {
-                                print('Button pressed ...');
-                              },
-                              text: 'Apply Filters',
-                              options: FFButtonOptions(
-                                width: double.infinity,
-                                height: 48.0,
-                                padding: EdgeInsets.all(8.0),
-                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 0.0, 0.0),
-                                color: Color(0xFF2A7BFF),
-                                textStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
-                                    .override(
-                                      fontFamily: 'Inter',
-                                      color: Colors.white,
-                                      fontSize: 16.0,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                elevation: 0.0,
-                                borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(24.0),
-                              ),
-                            ),
-                          ].divide(SizedBox(height: 10.0)),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'Available Providers',
-                          style: FlutterFlowTheme.of(context)
-                              .headlineSmall
-                              .override(
-                                fontFamily: 'Readex Pro',
-                                color: Color(0xFF101518),
-                                fontSize: 24.0,
-                                letterSpacing: 0.0,
-                                fontWeight: FontWeight.normal,
-                              ),
-                        ),
-                        ListView(
-                          padding: EdgeInsets.zero,
-                          primary: false,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          children: [
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  12.0, 12.0, 12.0, 12.0),
-                              child: Container(
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12.0),
-                                  border: Border.all(
-                                    color: Color(0xFFEDE8DF),
-                                    width: 1.0,
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.all(12.0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Container(
-                                        width: 80.0,
-                                        height: 80.0,
-                                        decoration: BoxDecoration(
-                                          color: Color(0x4D18AA99),
-                                          borderRadius:
-                                              BorderRadius.circular(40.0),
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(40.0),
-                                          child: Image.network(
-                                            'https://static.vecteezy.com/system/resources/previews/028/287/384/non_2x/a-mature-indian-male-doctor-on-a-white-background-ai-generated-photo.jpg',
-                                            width: 80.0,
-                                            height: 80.0,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Dr. Sarah Mitchell',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleMedium
-                                                      .override(
-                                                        fontFamily: 'Inter',
-                                                        color: Colors.white,
-                                                        fontSize: 18.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                            ),
-                                            Text(
-                                              'Cardiologist • 15 yrs exp',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        fontFamily: 'Inter',
-                                                        color:
-                                                            Color(0xFF57636C),
-                                                        fontSize: 14.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                      ),
-                                            ),
-                                            Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: [
-                                                Icon(
-                                                  Icons.star_rounded,
-                                                  color: Color(0xFFF3C344),
-                                                  size: 16.0,
-                                                ),
-                                                Text(
-                                                  '4.8',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodySmall
-                                                      .override(
-                                                        fontFamily: 'Inter',
-                                                        color:
-                                                            Color(0xFF101518),
-                                                        fontSize: 12.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                      ),
-                                                ),
-                                                Text(
-                                                  '• 2.3 miles away',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodySmall
-                                                      .override(
-                                                        fontFamily: 'Inter',
-                                                        color:
-                                                            Color(0xFF57636C),
-                                                        fontSize: 12.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                      ),
-                                                ),
-                                              ].divide(SizedBox(width: 4.0)),
-                                            ),
-                                            Text(
-                                              'Next available: Today, 2:30 PM',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodySmall
-                                                      .override(
-                                                        fontFamily: 'Inter',
-                                                        color:
-                                                            Color(0xFF507583),
-                                                        fontSize: 12.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                      ),
-                                            ),
-                                          ].divide(SizedBox(height: 4.0)),
-                                        ),
-                                      ),
-                                    ].divide(SizedBox(width: 12.0)),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  12.0, 12.0, 12.0, 12.0),
-                              child: Container(
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12.0),
-                                  border: Border.all(
-                                    color: Color(0xFFEDE8DF),
-                                    width: 1.0,
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.all(12.0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Container(
-                                        width: 80.0,
-                                        height: 80.0,
-                                        decoration: BoxDecoration(
-                                          color: Color(0x4D18AA99),
-                                          borderRadius:
-                                              BorderRadius.circular(40.0),
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(40.0),
-                                          child: Image.network(
-                                            'https://media.istockphoto.com/id/1189304032/photo/doctor-holding-digital-tablet-at-meeting-room.jpg?s=612x612&w=0&k=20&c=RtQn8w_vhzGYbflSa1B5ea9Ji70O8wHpSgGBSh0anUg=',
-                                            width: 80.0,
-                                            height: 80.0,
-                                            fit: BoxFit.cover,
-                                            alignment: Alignment(0.8, 0.0),
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Dr. James Wilson',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleMedium
-                                                      .override(
-                                                        fontFamily: 'Inter',
-                                                        color: Colors.white,
-                                                        fontSize: 18.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                            ),
-                                            Text(
-                                              'Family Medicine • 8 yrs exp',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        fontFamily: 'Inter',
-                                                        color:
-                                                            Color(0xFF57636C),
-                                                        fontSize: 14.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                      ),
-                                            ),
-                                            Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: [
-                                                Icon(
-                                                  Icons.star_rounded,
-                                                  color: Color(0xFFF3C344),
-                                                  size: 16.0,
-                                                ),
-                                                Text(
-                                                  '4.6',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodySmall
-                                                      .override(
-                                                        fontFamily: 'Inter',
-                                                        color:
-                                                            Color(0xFF101518),
-                                                        fontSize: 12.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                      ),
-                                                ),
-                                                Text(
-                                                  '• 3.1 miles away',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodySmall
-                                                      .override(
-                                                        fontFamily: 'Inter',
-                                                        color:
-                                                            Color(0xFF57636C),
-                                                        fontSize: 12.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                      ),
-                                                ),
-                                              ].divide(SizedBox(width: 4.0)),
-                                            ),
-                                            Text(
-                                              'Next available: Tomorrow, 9:15 AM',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodySmall
-                                                      .override(
-                                                        fontFamily: 'Inter',
-                                                        color:
-                                                            Color(0xFF507583),
-                                                        fontSize: 12.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                      ),
-                                            ),
-                                          ].divide(SizedBox(height: 4.0)),
-                                        ),
-                                      ),
-                                    ].divide(SizedBox(width: 12.0)),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  12.0, 12.0, 12.0, 12.0),
-                              child: Container(
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12.0),
-                                  border: Border.all(
-                                    color: Color(0xFFEDE8DF),
-                                    width: 1.0,
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.all(12.0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Container(
-                                        width: 80.0,
-                                        height: 80.0,
-                                        decoration: BoxDecoration(
-                                          color: Color(0x4D18AA99),
-                                          borderRadius:
-                                              BorderRadius.circular(40.0),
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(40.0),
-                                          child: Image.network(
-                                            'https://t3.ftcdn.net/jpg/02/95/51/80/240_F_295518052_aO5d9CqRhPnjlNDTRDjKLZHNftqfsxzI.jpg',
-                                            width: 80.0,
-                                            height: 80.0,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Dr. Emily Chen',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .titleMedium
-                                                      .override(
-                                                        fontFamily: 'Inter',
-                                                        color: Colors.white,
-                                                        fontSize: 18.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                            ),
-                                            Text(
-                                              'Pediatrician • 12 yrs exp',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .override(
-                                                        fontFamily: 'Inter',
-                                                        color:
-                                                            Color(0xFF57636C),
-                                                        fontSize: 14.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                      ),
-                                            ),
-                                            Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: [
-                                                Icon(
-                                                  Icons.star_rounded,
-                                                  color: Color(0xFFF3C344),
-                                                  size: 16.0,
-                                                ),
-                                                Text(
-                                                  '4.9',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodySmall
-                                                      .override(
-                                                        fontFamily: 'Inter',
-                                                        color:
-                                                            Color(0xFF101518),
-                                                        fontSize: 12.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                      ),
-                                                ),
-                                                Text(
-                                                  '• 1.8 miles away',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .bodySmall
-                                                      .override(
-                                                        fontFamily: 'Inter',
-                                                        color:
-                                                            Color(0xFF57636C),
-                                                        fontSize: 12.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                      ),
-                                                ),
-                                              ].divide(SizedBox(width: 4.0)),
-                                            ),
-                                            Text(
-                                              'Next available: Today, 4:45 PM',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodySmall
-                                                      .override(
-                                                        fontFamily: 'Inter',
-                                                        color:
-                                                            Color(0xFF507583),
-                                                        fontSize: 12.0,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                      ),
-                                            ),
-                                          ].divide(SizedBox(height: 4.0)),
-                                        ),
-                                      ),
-                                    ].divide(SizedBox(width: 12.0)),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ].divide(SizedBox(height: 12.0)),
-                        ),
-                      ].divide(SizedBox(height: 12.0)),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Featured Providers',
-                              style: FlutterFlowTheme.of(context)
-                                  .headlineSmall
-                                  .override(
-                                    fontFamily: 'Readex Pro',
-                                    color: Color(0xFF101518),
-                                    fontSize: 24.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                            ),
-                            Text(
-                              'View All',
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'Inter',
-                                    color: Color(0xFF507583),
-                                    fontSize: 14.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          height: 220.0,
-                          child: ListView(
-                            padding: EdgeInsets.fromLTRB(
-                              16.0,
-                              0,
-                              16.0,
-                              0,
-                            ),
-                            primary: false,
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              Container(
-                                width: 160.0,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      12.0, 12.0, 12.0, 12.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                        width: 80.0,
-                                        height: 80.0,
-                                        decoration: BoxDecoration(
-                                          color: Color(0x4D18AA99),
-                                          borderRadius:
-                                              BorderRadius.circular(40.0),
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(40.0),
-                                          child: Image.network(
-                                            '',
-                                            width: 80.0,
-                                            height: 80.0,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                                      Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            'Dr. Sarah Chen',
-                                            textAlign: TextAlign.center,
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyLarge
-                                                .override(
-                                                  fontFamily: 'Inter',
-                                                  color: Color(0xFF101518),
-                                                  fontSize: 16.0,
-                                                  letterSpacing: 0.0,
-                                                ),
-                                          ),
-                                          Text(
-                                            'Cardiology',
-                                            textAlign: TextAlign.center,
-                                            style: FlutterFlowTheme.of(context)
-                                                .labelMedium
-                                                .override(
-                                                  fontFamily: 'Inter',
-                                                  color: Color(0xFF507583),
-                                                  fontSize: 14.0,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                          ),
-                                          Text(
-                                            'Mayo Clinic',
-                                            textAlign: TextAlign.center,
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodySmall
-                                                .override(
-                                                  fontFamily: 'Inter',
-                                                  color: Color(0xFF57636C),
-                                                  fontSize: 12.0,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.normal,
-                                                ),
-                                          ),
-                                          Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Icon(
-                                                Icons.star_rounded,
-                                                color: Color(0xFFF3C344),
-                                                size: 16.0,
-                                              ),
-                                              Text(
-                                                '4.9',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodySmall
-                                                        .override(
-                                                          fontFamily: 'Inter',
-                                                          color:
-                                                              Color(0xFF101518),
-                                                          fontSize: 12.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                        ),
-                                              ),
-                                              Text(
-                                                '(2.8k)',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodySmall
-                                                        .override(
-                                                          fontFamily: 'Inter',
-                                                          color:
-                                                              Color(0xFF57636C),
-                                                          fontSize: 12.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                        ),
-                                              ),
-                                            ].divide(SizedBox(width: 4.0)),
-                                          ),
-                                        ].divide(SizedBox(height: 4.0)),
-                                      ),
-                                    ].divide(SizedBox(height: 8.0)),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                width: 160.0,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      12.0, 12.0, 12.0, 12.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                        width: 80.0,
-                                        height: 80.0,
-                                        decoration: BoxDecoration(
-                                          color: Color(0x4D18AA99),
-                                          borderRadius:
-                                              BorderRadius.circular(40.0),
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(40.0),
-                                          child: Image.network(
-                                            '',
-                                            width: 80.0,
-                                            height: 80.0,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                                      Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            'Dr. Michael Lee',
-                                            textAlign: TextAlign.center,
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyLarge
-                                                .override(
-                                                  fontFamily: 'Inter',
-                                                  color: Color(0xFF101518),
-                                                  fontSize: 16.0,
-                                                  letterSpacing: 0.0,
-                                                ),
-                                          ),
-                                          Text(
-                                            'Neurology',
-                                            textAlign: TextAlign.center,
-                                            style: FlutterFlowTheme.of(context)
-                                                .labelMedium
-                                                .override(
-                                                  fontFamily: 'Inter',
-                                                  color: Color(0xFF507583),
-                                                  fontSize: 14.0,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                          ),
-                                          Text(
-                                            'Cleveland Clinic',
-                                            textAlign: TextAlign.center,
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodySmall
-                                                .override(
-                                                  fontFamily: 'Inter',
-                                                  color: Color(0xFF57636C),
-                                                  fontSize: 12.0,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.normal,
-                                                ),
-                                          ),
-                                          Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Icon(
-                                                Icons.star_rounded,
-                                                color: Color(0xFFF3C344),
-                                                size: 16.0,
-                                              ),
-                                              Text(
-                                                '4.8',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodySmall
-                                                        .override(
-                                                          fontFamily: 'Inter',
-                                                          color:
-                                                              Color(0xFF101518),
-                                                          fontSize: 12.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                        ),
-                                              ),
-                                              Text(
-                                                '(1.9k)',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodySmall
-                                                        .override(
-                                                          fontFamily: 'Inter',
-                                                          color:
-                                                              Color(0xFF57636C),
-                                                          fontSize: 12.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                        ),
-                                              ),
-                                            ].divide(SizedBox(width: 4.0)),
-                                          ),
-                                        ].divide(SizedBox(height: 4.0)),
-                                      ),
-                                    ].divide(SizedBox(height: 8.0)),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                width: 160.0,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      12.0, 12.0, 12.0, 12.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                        width: 80.0,
-                                        height: 80.0,
-                                        decoration: BoxDecoration(
-                                          color: Color(0x4D18AA99),
-                                          borderRadius:
-                                              BorderRadius.circular(40.0),
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(40.0),
-                                          child: Image.network(
-                                            '',
-                                            width: 80.0,
-                                            height: 80.0,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                                      Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            'Dr. Emily Taylor',
-                                            textAlign: TextAlign.center,
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyLarge
-                                                .override(
-                                                  fontFamily: 'Inter',
-                                                  color: Color(0xFF101518),
-                                                  fontSize: 16.0,
-                                                  letterSpacing: 0.0,
-                                                ),
-                                          ),
-                                          Text(
-                                            'Pediatrics',
-                                            textAlign: TextAlign.center,
-                                            style: FlutterFlowTheme.of(context)
-                                                .labelMedium
-                                                .override(
-                                                  fontFamily: 'Inter',
-                                                  color: Color(0xFF507583),
-                                                  fontSize: 14.0,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                          ),
-                                          Text(
-                                            'Johns Hopkins',
-                                            textAlign: TextAlign.center,
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodySmall
-                                                .override(
-                                                  fontFamily: 'Inter',
-                                                  color: Color(0xFF57636C),
-                                                  fontSize: 12.0,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.normal,
-                                                ),
-                                          ),
-                                          Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Icon(
-                                                Icons.star_rounded,
-                                                color: Color(0xFFF3C344),
-                                                size: 16.0,
-                                              ),
-                                              Text(
-                                                '4.9',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodySmall
-                                                        .override(
-                                                          fontFamily: 'Inter',
-                                                          color:
-                                                              Color(0xFF101518),
-                                                          fontSize: 12.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                        ),
-                                              ),
-                                              Text(
-                                                '(3.2k)',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodySmall
-                                                        .override(
-                                                          fontFamily: 'Inter',
-                                                          color:
-                                                              Color(0xFF57636C),
-                                                          fontSize: 12.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                        ),
-                                              ),
-                                            ].divide(SizedBox(width: 4.0)),
-                                          ),
-                                        ].divide(SizedBox(height: 4.0)),
-                                      ),
-                                    ].divide(SizedBox(height: 8.0)),
-                                  ),
-                                ),
-                              ),
-                            ].divide(SizedBox(width: 16.0)),
-                          ),
-                        ),
-                      ].divide(SizedBox(height: 12.0)),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              12.0, 0.0, 12.0, 0.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Nearby Healthcare Providers',
-                                style: FlutterFlowTheme.of(context)
-                                    .headlineSmall
-                                    .override(
-                                      fontFamily: 'Readex Pro',
-                                      color: Color(0xFF101518),
-                                      fontSize: 24.0,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                              ),
-                              Row(
+                              Column(
                                 mainAxisSize: MainAxisSize.max,
-                                children:
-                                    <Widget>[].divide(SizedBox(width: 8.0)),
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Provider Type',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          font: GoogleFonts.inter(
+                                            fontWeight: FontWeight.w500,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.w500,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontStyle,
+                                        ),
+                                  ),
+                                  FlutterFlowDropDown<String>(
+                                    controller:
+                                        _model.dropDownValueController1 ??=
+                                            FormFieldController<String>(null),
+                                    options: List<String>.from(
+                                        ['Hospital', 'Doctor', 'Lab']),
+                                    optionLabels: ['Hospital', 'Doctor', 'Lab'],
+                                    onChanged: (val) => safeSetState(
+                                        () => _model.dropDownValue1 = val),
+                                    width: double.infinity,
+                                    height: 50.0,
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          font: GoogleFonts.inter(
+                                            fontWeight:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontWeight,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                          letterSpacing: 0.0,
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontStyle,
+                                        ),
+                                    hintText: '  Select provider type',
+                                    icon: Icon(
+                                      Icons.keyboard_arrow_down_rounded,
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryText,
+                                      size: 24.0,
+                                    ),
+                                    fillColor: FlutterFlowTheme.of(context)
+                                        .primaryBackground,
+                                    elevation: 2.0,
+                                    borderColor:
+                                        FlutterFlowTheme.of(context).alternate,
+                                    borderWidth: 1.0,
+                                    borderRadius: 8.0,
+                                    margin: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 0.0),
+                                    hidesUnderline: true,
+                                    isOverButton: true,
+                                    isSearchable: false,
+                                    isMultiSelect: false,
+                                  ),
+                                ].divide(SizedBox(height: 8.0)),
                               ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              12.0, 0.0, 12.0, 0.0),
-                          child: Container(
-                            width: double.infinity,
-                            height: 240.0,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12.0),
-                              border: Border.all(
-                                color: Color(0xFFEDE8DF),
-                                width: 1.0,
+                              Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Specialty',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          font: GoogleFonts.inter(
+                                            fontWeight: FontWeight.w500,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.w500,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontStyle,
+                                        ),
+                                  ),
+                                  FlutterFlowDropDown<String>(
+                                    controller:
+                                        _model.dropDownValueController2 ??=
+                                            FormFieldController<String>(null),
+                                    options: () {
+                                      if (_model.dropDownValue1 == 'Hospital') {
+                                        return FFAppConstants.Specialties;
+                                      } else if (_model.dropDownValue1 ==
+                                          'Doctor') {
+                                        return FFAppConstants.DoctorSpeciality;
+                                      } else {
+                                        return FFAppConstants.LabSpeciality;
+                                      }
+                                    }(),
+                                    onChanged: (val) => safeSetState(
+                                        () => _model.dropDownValue2 = val),
+                                    width: double.infinity,
+                                    height: 50.0,
+                                    searchHintTextStyle: TextStyle(),
+                                    searchTextStyle: TextStyle(),
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          font: GoogleFonts.inter(
+                                            fontWeight:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontWeight,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                          letterSpacing: 0.0,
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontStyle,
+                                        ),
+                                    hintText: '  Select specialty',
+                                    searchHintText: 'Search specialties',
+                                    icon: Icon(
+                                      Icons.keyboard_arrow_down_rounded,
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryText,
+                                      size: 24.0,
+                                    ),
+                                    fillColor: FlutterFlowTheme.of(context)
+                                        .primaryBackground,
+                                    elevation: 2.0,
+                                    borderColor:
+                                        FlutterFlowTheme.of(context).alternate,
+                                    borderWidth: 1.0,
+                                    borderRadius: 8.0,
+                                    margin: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 0.0),
+                                    hidesUnderline: true,
+                                    isSearchable: true,
+                                    isMultiSelect: false,
+                                  ),
+                                ].divide(SizedBox(height: 8.0)),
                               ),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8.0),
-                              child: Image.asset(
-                                'assets/images/maps.png',
-                                width: 200.0,
-                                height: 200.0,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              12.0, 0.0, 12.0, 0.0),
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 16.0, 16.0, 16.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
+                              Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            '12 Providers Found',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  fontFamily: 'Inter',
-                                                  color: Color(0xFF57636C),
-                                                  fontSize: 14.0,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.normal,
-                                                ),
-                                          ),
-                                          Text(
-                                            'Within 5 mile radius',
-                                            style: FlutterFlowTheme.of(context)
-                                                .labelMedium
-                                                .override(
-                                                  fontFamily: 'Inter',
-                                                  color: Color(0xFF57636C),
-                                                  fontSize: 14.0,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                          ),
-                                        ],
+                                      Text(
+                                        'Search Radius',
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              font: GoogleFonts.inter(
+                                                fontWeight: FontWeight.w500,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium
+                                                        .fontStyle,
+                                              ),
+                                              letterSpacing: 0.0,
+                                              fontWeight: FontWeight.w500,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontStyle,
+                                            ),
                                       ),
-                                      FFButtonWidget(
-                                        onPressed: () {
-                                          print('Button pressed ...');
-                                        },
-                                        text: 'Filter',
-                                        icon: Icon(
-                                          Icons.filter_list,
-                                          color: Color(0xFF101518),
-                                          size: 15.0,
-                                        ),
-                                        options: FFButtonOptions(
-                                          width: 100.0,
-                                          height: 36.0,
-                                          padding: EdgeInsets.all(8.0),
-                                          iconPadding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 0.0, 0.0, 0.0),
-                                          color: Colors.white,
-                                          textStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    fontFamily: 'Inter',
-                                                    color: Color(0xFF101518),
-                                                    fontSize: 14.0,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                  ),
-                                          elevation: 0.0,
-                                          borderSide: BorderSide(
-                                            color: Color(0xFFEDE8DF),
-                                            width: 1.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(18.0),
-                                        ),
+                                      Text(
+                                        _model.sliderValue.toString(),
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              font: GoogleFonts.inter(
+                                                fontWeight: FontWeight.w500,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium
+                                                        .fontStyle,
+                                              ),
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              letterSpacing: 0.0,
+                                              fontWeight: FontWeight.w500,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .fontStyle,
+                                            ),
                                       ),
                                     ],
                                   ),
-                                  ListView(
-                                    padding: EdgeInsets.zero,
-                                    primary: false,
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.vertical,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            12.0, 12.0, 12.0, 12.0),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(12.0),
-                                            border: Border.all(
-                                              color: Color(0xFFEDE8DF),
-                                              width: 1.0,
-                                            ),
-                                          ),
-                                          child: Padding(
-                                            padding: EdgeInsets.all(12.0),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: [
-                                                Container(
-                                                  width: 60.0,
-                                                  height: 60.0,
-                                                  decoration: BoxDecoration(
-                                                    color: Color(0x4D18AA99),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30.0),
-                                                  ),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30.0),
-                                                    child: Image.network(
-                                                      '',
-                                                      width: 60.0,
-                                                      height: 60.0,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        'Dr. Sarah Johnson',
-                                                        style: FlutterFlowTheme
-                                                                .of(context)
-                                                            .bodyLarge
-                                                            .override(
-                                                              fontFamily:
-                                                                  'Inter',
-                                                              color: Color(
-                                                                  0xFF101518),
-                                                              fontSize: 16.0,
-                                                              letterSpacing:
-                                                                  0.0,
-                                                            ),
+                                  Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        16.0, 0.0, 16.0, 0.0),
+                                    child: Container(
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryBackground,
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsets.all(12.0),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Text(
+                                              '5 km',
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodySmall
+                                                      .override(
+                                                        font: GoogleFonts.inter(
+                                                          fontWeight:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodySmall
+                                                                  .fontWeight,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodySmall
+                                                                  .fontStyle,
+                                                        ),
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .secondaryText,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodySmall
+                                                                .fontWeight,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodySmall
+                                                                .fontStyle,
                                                       ),
-                                                      Text(
-                                                        'Family Medicine • 0.8 miles',
-                                                        style: FlutterFlowTheme
-                                                                .of(context)
-                                                            .labelMedium
-                                                            .override(
-                                                              fontFamily:
-                                                                  'Inter',
-                                                              color: Color(
-                                                                  0xFF57636C),
-                                                              fontSize: 14.0,
-                                                              letterSpacing:
-                                                                  0.0,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                            ),
-                                                      ),
-                                                    ].divide(
-                                                        SizedBox(height: 4.0)),
-                                                  ),
-                                                ),
-                                                Icon(
-                                                  Icons.chevron_right,
-                                                  color: Color(0xFF57636C),
-                                                  size: 24.0,
-                                                ),
-                                              ].divide(SizedBox(width: 12.0)),
                                             ),
-                                          ),
+                                            Expanded(
+                                              child: Slider(
+                                                activeColor:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                                inactiveColor:
+                                                    FlutterFlowTheme.of(context)
+                                                        .alternate,
+                                                min: 5.0,
+                                                max: 50.0,
+                                                value: _model.sliderValue ??=
+                                                    5.0,
+                                                divisions: 9,
+                                                onChanged: (newValue) {
+                                                  safeSetState(() => _model
+                                                      .sliderValue = newValue);
+                                                },
+                                              ),
+                                            ),
+                                            Text(
+                                              '50 km',
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodySmall
+                                                      .override(
+                                                        font: GoogleFonts.inter(
+                                                          fontWeight:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodySmall
+                                                                  .fontWeight,
+                                                          fontStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .bodySmall
+                                                                  .fontStyle,
+                                                        ),
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .secondaryText,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodySmall
+                                                                .fontWeight,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodySmall
+                                                                .fontStyle,
+                                                      ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            12.0, 12.0, 12.0, 12.0),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(12.0),
-                                            border: Border.all(
-                                              color: Color(0xFFEDE8DF),
-                                              width: 1.0,
-                                            ),
-                                          ),
-                                          child: Padding(
-                                            padding: EdgeInsets.all(12.0),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: [
-                                                Container(
-                                                  width: 60.0,
-                                                  height: 60.0,
-                                                  decoration: BoxDecoration(
-                                                    color: Color(0x4D18AA99),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30.0),
-                                                  ),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30.0),
-                                                    child: Image.network(
-                                                      '',
-                                                      width: 60.0,
-                                                      height: 60.0,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        'Dr. Michael Chen',
-                                                        style: FlutterFlowTheme
-                                                                .of(context)
-                                                            .bodyLarge
-                                                            .override(
-                                                              fontFamily:
-                                                                  'Inter',
-                                                              color: Color(
-                                                                  0xFF101518),
-                                                              fontSize: 16.0,
-                                                              letterSpacing:
-                                                                  0.0,
-                                                            ),
-                                                      ),
-                                                      Text(
-                                                        'Internal Medicine • 1.2 miles',
-                                                        style: FlutterFlowTheme
-                                                                .of(context)
-                                                            .labelMedium
-                                                            .override(
-                                                              fontFamily:
-                                                                  'Inter',
-                                                              color: Color(
-                                                                  0xFF57636C),
-                                                              fontSize: 14.0,
-                                                              letterSpacing:
-                                                                  0.0,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                            ),
-                                                      ),
-                                                    ].divide(
-                                                        SizedBox(height: 4.0)),
-                                                  ),
-                                                ),
-                                                Icon(
-                                                  Icons.chevron_right,
-                                                  color: Color(0xFF57636C),
-                                                  size: 24.0,
-                                                ),
-                                              ].divide(SizedBox(width: 12.0)),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ].divide(SizedBox(height: 12.0)),
+                                    ),
                                   ),
-                                ].divide(SizedBox(height: 12.0)),
+                                ].divide(SizedBox(height: 8.0)),
                               ),
+                            ].divide(SizedBox(height: 16.0)),
+                          ),
+                          FFButtonWidget(
+                            onPressed: () async {
+                              _model.searchResult =
+                                  await GetSearchResultCall.call(
+                                radius: _model.sliderValue,
+                              );
+
+                              if ((_model.searchResult?.succeeded ?? true)) {
+                                FFAppState().SearchedResults = (getJsonField(
+                                  (_model.searchResult?.jsonBody ?? ''),
+                                  r'''$.data''',
+                                  true,
+                                )!
+                                            .toList()
+                                            .map<SearchedProvidersStruct?>(
+                                                SearchedProvidersStruct
+                                                    .maybeFromMap)
+                                            .toList()
+                                        as Iterable<SearchedProvidersStruct?>)
+                                    .withoutNulls
+                                    .toList()
+                                    .cast<SearchedProvidersStruct>();
+                                safeSetState(() {});
+
+                                context.pushNamed(
+                                    ProvidersResultsWidget.routeName);
+                              } else {
+                                await showDialog(
+                                  context: context,
+                                  builder: (alertDialogContext) {
+                                    return AlertDialog(
+                                      title: Text('error'),
+                                      content: Text(
+                                          'error getting healthcare providers'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(alertDialogContext),
+                                          child: Text('Ok'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
+
+                              safeSetState(() {});
+                            },
+                            text: 'Search Providers',
+                            icon: Icon(
+                              Icons.search,
+                              size: 20.0,
+                            ),
+                            options: FFButtonOptions(
+                              width: double.infinity,
+                              height: 50.0,
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  24.0, 0.0, 24.0, 0.0),
+                              iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 0.0, 0.0),
+                              iconColor: Colors.white,
+                              color: FlutterFlowTheme.of(context).primary,
+                              textStyle: FlutterFlowTheme.of(context)
+                                  .titleSmall
+                                  .override(
+                                    font: GoogleFonts.interTight(
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .titleSmall
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .titleSmall
+                                          .fontStyle,
+                                    ),
+                                    color: Colors.white,
+                                    letterSpacing: 0.0,
+                                    fontWeight: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .fontWeight,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .fontStyle,
+                                  ),
+                              elevation: 2.0,
+                              borderSide: BorderSide(
+                                color: Colors.transparent,
+                              ),
+                              borderRadius: BorderRadius.circular(8.0),
                             ),
                           ),
-                        ),
-                      ].divide(SizedBox(height: 12.0)),
+                        ].divide(SizedBox(height: 24.0)),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ].divide(SizedBox(height: 0.0)),
+              ].divide(SizedBox(height: 24.0)),
+            ),
           ),
         ),
       ),
